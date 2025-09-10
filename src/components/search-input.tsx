@@ -5,6 +5,9 @@ import {
   QueryClientProvider,
   useQuery,
 } from "@tanstack/react-query";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Command, CommandItem, CommandList } from "./ui/command";
+import { useHandlerSearchPopover } from "@/hooks/useHandleSearchPopover";
 
 function useGetUserInputDelay(value: string, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -46,6 +49,10 @@ const SearchInputContent = () => {
     enabled: !!debouncedValue,
   });
 
+  const { handleInputFocus, isPopoverOpen, inputRef } = useHandlerSearchPopover(
+    { data, isLoading },
+  );
+
   useEffect(() => {
     if (debouncedValue) {
       console.log("Searching: ", debouncedValue);
@@ -60,21 +67,38 @@ const SearchInputContent = () => {
         type="search"
         placeholder="Search..."
         value={inputValue}
+        ref={inputRef}
         onChange={(e) => setInputValue(e.target.value)}
+        onFocus={handleInputFocus}
+        onClick={handleInputFocus}
       />
-      <div className="flex flex-col gap-2">
-        {isLoading && "Loading..."}
-        {data && data.games.length > 0 && (
-          <ul>
-            {data.games.map((game) => (
-              <li>
-                {game.name} - {game.igdbId}
-              </li>
-            ))}
-          </ul>
-        )}
-        {data?.games.length === 0 && "No results"}
-      </div>
+
+      <Popover open={isPopoverOpen}>
+        <PopoverTrigger></PopoverTrigger>
+        <PopoverContent>
+          <Command>
+            <CommandList>
+              {isLoading && "Loading..."}
+              {data && data.games.length > 0 && (
+                <>
+                  {data.games.map((game) => (
+                    <CommandItem
+                      key={game.igdbId}
+                      value={`${game.igdbId}`}
+                      onSelect={() => console.log("Selected: ", game.name)}
+                    >
+                      {game.name} - {game.igdbId}
+                    </CommandItem>
+                  ))}
+                </>
+              )}
+              {data?.games.length === 0 && "No results"}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      <div className="flex flex-col gap-2"></div>
     </div>
   );
 };
