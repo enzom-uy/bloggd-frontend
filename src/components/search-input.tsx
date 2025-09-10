@@ -53,13 +53,6 @@ const SearchInputContent = () => {
     { data, isLoading },
   );
 
-  useEffect(() => {
-    if (debouncedValue) {
-      console.log("Searching: ", debouncedValue);
-      console.log("Query data: ", data);
-    }
-  }, [debouncedValue, data]);
-
   return (
     <div className="flex flex-col gap-4">
       <Input

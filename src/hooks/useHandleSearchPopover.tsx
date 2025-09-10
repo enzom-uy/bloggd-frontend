@@ -30,12 +30,16 @@ export const useHandlerSearchPopover = ({ data, isLoading }: Props) => {
     inputRef.current?.focus();
     if (data && data.games?.length > 0) {
       setIsPopoverOpen(true);
+    } else {
+      setIsPopoverOpen(false);
     }
   };
 
   useEffect(() => {
     if ((data && data.games?.length > 0) || isLoading) {
       setIsPopoverOpen(true);
+    } else {
+      setIsPopoverOpen(false);
     }
   }, [data, isLoading]);
 
