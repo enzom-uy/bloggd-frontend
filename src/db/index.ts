@@ -1,9 +1,8 @@
-import { drizzle } from "drizzle-orm/singlestore/driver";
-import { Pool } from "pg";
-import * as schema from "../../drizzle/schema";
+import "dotenv/config"
+import { drizzle } from "drizzle-orm/postgres-js"
+import postgres from "postgres"
+import * as schema from "../../drizzle/schema"
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+const client = postgres(process.env.DATABASE_URL as string)
 
-export const db = drizzle(pool, { schema });
+export const db = drizzle(client, { schema })

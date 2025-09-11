@@ -1,13 +1,16 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { Input } from "@/components/ui/input";
-import { SearchInput } from "@/components/search-input";
+import Layout from "../layouts/Layout.astro"
+import { Input } from "@/components/ui/input"
+import { SignUp, SignUpWrapper } from "@/components/sign-up/sign-up"
+import { SearchInput } from "@/components/search-input"
+export const prerender = false
 ---
 
 <Layout>
   <div
     class="flex min-h-screen max-w-72 min-w-screen items-center justify-center"
   >
+    <SignUpWrapper client:load />
     <SearchInput client:load />
   </div>
 </Layout>

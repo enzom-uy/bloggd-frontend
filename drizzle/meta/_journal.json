@@ -15,6 +15,41 @@
       "when": 1757606996208,
       "tag": "0001_yellow_tomorrow_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1757621981812,
+      "tag": "0002_complex_chimera",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1757625284888,
+      "tag": "0003_fair_iron_monger",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1757625968585,
+      "tag": "0004_sharp_typhoid_mary",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1757626226515,
+      "tag": "0005_wise_mathemanic",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1757626298843,
+      "tag": "0006_short_snowbird",
+      "breakpoints": true
     }
   ]
 }

@@ -12,25 +12,25 @@ import {
   text,
   date,
   pgEnum,
-} from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
+} from "drizzle-orm/pg-core"
+import { sql } from "drizzle-orm"
 
-export const USER_ROLES = ["user", "supporter", "admin"] as const;
+export const USER_ROLES = ["user", "supporter", "admin"] as const
 
-export const userRole = pgEnum("user_role", USER_ROLES);
+export const userRole = pgEnum("user_role", USER_ROLES)
 
 export const activityType = pgEnum("activity_type", [
   "add_review",
   "start_game",
   "finish_game",
   "drop_game",
-]);
+])
 export const userGameStatus = pgEnum("user_game_status", [
   "backlog",
   "playing",
   "played",
   "dropped",
-]);
+])
 
 export const howlongtobeatData = pgTable(
   "howlongtobeat_data",
@@ -78,7 +78,7 @@ export const howlongtobeatData = pgTable(
       name: "howlongtobeat_data_game_id_fkey",
     }),
   ],
-);
+)
 
 export const gameGenres = pgTable(
   "game_genres",
@@ -100,7 +100,7 @@ export const gameGenres = pgTable(
     }).onDelete("cascade"),
     unique("game_genres_game_genre_unique").on(table.gameId, table.genreId),
   ],
-);
+)
 
 export const reviewLikes = pgTable(
   "review_likes",
@@ -123,7 +123,7 @@ export const reviewLikes = pgTable(
     }).onDelete("cascade"),
     unique("review_likes_user_review_unique").on(table.reviewId, table.userId),
   ],
-);
+)
 
 export const collections = pgTable(
   "collections",
@@ -147,7 +147,7 @@ export const collections = pgTable(
       .onUpdate("cascade")
       .onDelete("cascade"),
   ],
-);
+)
 
 export const gamePlatforms = pgTable(
   "game_platforms",
@@ -168,7 +168,7 @@ export const gamePlatforms = pgTable(
     }),
     unique("game_platforms_platform_name_key").on(table.platformName),
   ],
-);
+)
 
 export const gameStats = pgTable(
   "game_stats",
@@ -188,7 +188,7 @@ export const gameStats = pgTable(
       name: "game_stats_game_id_fkey",
     }),
   ],
-);
+)
 
 export const games = pgTable(
   "games",
@@ -218,7 +218,7 @@ export const games = pgTable(
     unique("games_igdb_id_unique").on(table.igdbId),
     unique("games_slug_unique").on(table.slug),
   ],
-);
+)
 
 export const userActivity = pgTable(
   "user_activity",
@@ -264,7 +264,7 @@ export const userActivity = pgTable(
       name: "user_activity_user_id_fkey",
     }).onDelete("cascade"),
   ],
-);
+)
 
 export const reviews = pgTable(
   "reviews",
@@ -302,7 +302,7 @@ export const reviews = pgTable(
     }).onDelete("cascade"),
     unique("reviews_user_game_unique").on(table.userId, table.gameId),
   ],
-);
+)
 
 export const usersSocialLinks = pgTable(
   "users_social_links",
@@ -325,7 +325,7 @@ export const usersSocialLinks = pgTable(
       .onUpdate("cascade")
       .onDelete("cascade"),
   ],
-);
+)
 
 export const collectionGames = pgTable(
   "collection_games",
@@ -350,24 +350,25 @@ export const collectionGames = pgTable(
       table.gameId,
     ),
   ],
-);
+)
 
 export const users = pgTable(
   "users",
   {
     id: varchar({ length: 36 }).primaryKey().notNull(),
     username: varchar({ length: 50 }).notNull(),
+    displayUsername: varchar("display_username", { length: 50 }).notNull(),
     email: varchar({ length: 255 }).notNull(),
-    emailVerified: boolean("email_verified").default(false).notNull(),
-    passwordHash: varchar("password_hash", { length: 255 }),
+    email_verified: boolean("email_verified").default(false).notNull(),
+    password_hash: varchar("password_hash", { length: 255 }),
     role: userRole().notNull(),
     steamId: varchar("steam_id", { length: 50 }),
-    image: text("profile_picture_url"),
+    profile_picture_url: text("profile_picture_url"),
     bio: text(),
-    createdAt: timestamp("created_at", { mode: "string" })
+    createdAt: timestamp("created_at", { mode: "date" }) // Cambiar a "date"
       .defaultNow()
       .notNull(),
-    updatedAt: timestamp("updated_at", { mode: "string" }),
+    updatedAt: timestamp("updated_at", { mode: "date" }), // Cambiar a "date"
   },
   (table) => [
     index("idx_users_email").using(
@@ -382,7 +383,7 @@ export const users = pgTable(
     unique("users_email_key").on(table.email),
     unique("users_steam_id_key").on(table.steamId),
   ],
-);
+)
 
 export const userSessions = pgTable(
   "user_sessions",
@@ -390,11 +391,11 @@ export const userSessions = pgTable(
     id: varchar({ length: 36 }).primaryKey().notNull(),
     userId: varchar("user_id", { length: 36 }).notNull(),
     token: varchar("token", { length: 255 }).notNull(),
-    expiresAt: timestamp("expires_at", { mode: "string" }).notNull(),
+    expiresAt: timestamp("expires_at", { mode: "date" }).notNull(), // Cambiar a "date"
     ipAddress: varchar("ip_address", { length: 50 }),
     userAgent: varchar("user_agent", { length: 255 }),
-    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
-    updatedAt: timestamp("updated_at", { mode: "string" }),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(), // Cambiar a "date"
+    updatedAt: timestamp("updated_at", { mode: "date" }), // Cambiar a "date"
   },
   (table) => [
     unique("user_sessions_token_key").on(table.token),
@@ -402,9 +403,9 @@ export const userSessions = pgTable(
       columns: [table.userId],
       foreignColumns: [users.id],
       name: "user_sessions_user_id_fkey",
-    }),
+    }).onDelete("cascade"),
   ],
-);
+)
 
 export const accounts = pgTable(
   "accounts",
@@ -416,16 +417,16 @@ export const accounts = pgTable(
     accessToken: varchar("access_token", { length: 255 }),
     refreshToken: varchar("refresh_token", { length: 255 }),
     accessTokenExpiresAt: timestamp("access_token_expires_at", {
-      mode: "string",
+      mode: "date", // Cambiar a "date"
     }),
     refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
-      mode: "string",
+      mode: "date", // Cambiar a "date"
     }),
     scope: varchar("scope", { length: 255 }),
     idToken: varchar("id_token", { length: 255 }),
     password: varchar("password", { length: 255 }),
-    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
-    updatedAt: timestamp("updated_at", { mode: "string" }),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(), // Cambiar a "date"
+    updatedAt: timestamp("updated_at", { mode: "date" }), // Cambiar a "date"
   },
   (table) => [
     index("idx_accounts_user_id").using(
@@ -441,18 +442,18 @@ export const accounts = pgTable(
       columns: [table.userId],
       foreignColumns: [users.id],
       name: "accounts_user_id_fkey",
-    }),
+    }).onDelete("cascade"),
   ],
-);
+)
 
 export const verifications = pgTable("verifications", {
   id: varchar({ length: 36 }).primaryKey().notNull(),
   identifier: varchar("identifier", { length: 100 }).notNull(),
   value: varchar("value", { length: 100 }).notNull(),
-  expiresAt: timestamp("expires_at", { mode: "string" }).notNull(),
-  createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: "string" }),
-});
+  expiresAt: timestamp("expires_at", { mode: "date" }).notNull(), // Cambiar a "date"
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(), // Cambiar a "date"
+  updatedAt: timestamp("updated_at", { mode: "date" }), // Cambiar a "date"
+})
 
 export const genres = pgTable(
   "genres",
@@ -468,7 +469,7 @@ export const genres = pgTable(
     ),
     unique("genres_name_slug_unique").on(table.name, table.slug),
   ],
-);
+)
 
 export const userGames = pgTable(
   "user_games",
@@ -502,4 +503,4 @@ export const userGames = pgTable(
     }),
     unique("user_games_user_game_unique").on(table.userId, table.gameId),
   ],
-);
+)

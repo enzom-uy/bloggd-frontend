@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "display_username" varchar(50) NOT NULL;
