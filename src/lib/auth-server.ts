@@ -29,12 +29,11 @@ export const auth = betterAuth({
   },
   user: {
     fields: {
-      name: "username", // mapeo necesario
-      emailVerified: "email_verified", // mapeo necesario
-      image: "profile_picture_url", // mapeo necesario
+      name: "username",
+      emailVerified: "email_verified",
+      image: "profile_picture_url",
     },
     additionalFields: {
-      // Solo campos custom que NO maneja Better-Auth por defecto
       role: {
         type: "string",
         required: true,

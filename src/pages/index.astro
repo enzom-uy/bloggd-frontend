@@ -1,8 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro"
-import { Input } from "@/components/ui/input"
-import { SignUp, SignUpWrapper } from "@/components/sign-up/sign-up"
+import { SignUpWrapper } from "@/components/sign-up/sign-up"
+import { SignIn } from "@/components/sign-in/sign-in"
 import { SearchInput } from "@/components/search-input"
+
 export const prerender = false
 ---
 
@@ -11,6 +12,9 @@ export const prerender = false
     class="flex min-h-screen max-w-72 min-w-screen items-center justify-center"
   >
     <SignUpWrapper client:load />
-    <SearchInput client:load />
+    <div class="bg-slate-800">
+      Sign In
+      <SignIn client:load />
+    </div>
   </div>
 </Layout>

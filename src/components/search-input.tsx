@@ -1,14 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Input } from "./ui/input"
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { Command, CommandItem, CommandList } from "./ui/command"
 import { useHandlerSearchPopover } from "@/hooks/useHandleSearchPopover"
-import { authClient } from "@/lib/auth-client"
+import { QueryWrapper } from "./query-wrapper"
 
 function useGetUserInputDelay(value: string, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value)
@@ -23,12 +19,14 @@ function useGetUserInputDelay(value: string, delay: number) {
   return debouncedValue
 }
 
-const SearchInputContent = () => {
+interface Props {
+  sessionProp: any
+}
+
+const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
   const [inputValue, setInputValue] = useState("")
   const debouncedValue = useGetUserInputDelay(inputValue, 500)
   const lastSearched = useRef("")
-  const { data: session, error, isPending, refetch } = authClient.useSession()
-  console.log("session: ", session)
 
   const { data, isLoading, isFetched } = useQuery({
     queryKey: ["search", debouncedValue],
@@ -36,6 +34,7 @@ const SearchInputContent = () => {
       if (!debouncedValue || debouncedValue === lastSearched.current)
         return null
       console.log("Searching: ", debouncedValue)
+      console.log("Session: ", sessionProp)
       lastSearched.current = debouncedValue
       const res = await fetch(
         `http://localhost:3000/api/v1/games/search?game_name=${debouncedValue}`,
@@ -99,12 +98,11 @@ const SearchInputContent = () => {
   )
 }
 
-const client = new QueryClient()
-export const SearchInput = () => {
+export const SearchInput: React.FC<Props> = ({ sessionProp }: Props) => {
   return (
-    <QueryClientProvider client={client}>
-      <SearchInputContent />
-    </QueryClientProvider>
+    <QueryWrapper>
+      <SearchInputContent sessionProp={sessionProp} />
+    </QueryWrapper>
   )
 }
 
