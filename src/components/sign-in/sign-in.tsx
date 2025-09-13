@@ -9,18 +9,30 @@ export const SignIn = () => {
     console.log("email: ", email)
     console.log("password: ", password)
     const { data, error } = await authClient.signIn.email({
-      email,
-      password,
+      email: email,
+      password: password,
       rememberMe: true,
     })
-    console.log("data: ", data)
-    console.log("error: ", error)
+    if (error) {
+      console.log("error: ", error)
+    }
+    window.location.href = "/signed-in"
   }
   return (
     <div>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input type="text" placeholder="Email" />
-        <input type="password" placeholder="Password" />
+        <input
+          type="text"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <button type="submit">Sign In</button>
       </form>
     </div>

@@ -5,6 +5,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { Command, CommandItem, CommandList } from "./ui/command"
 import { useHandlerSearchPopover } from "@/hooks/useHandleSearchPopover"
 import { QueryWrapper } from "./query-wrapper"
+import type { Session } from "@/lib/auth-client"
+import { useGetGamesSuggestions } from "@/hooks/useGetGamesSuggestions"
 
 function useGetUserInputDelay(value: string, delay: number) {
   const [debouncedValue, setDebouncedValue] = useState(value)
@@ -20,35 +22,19 @@ function useGetUserInputDelay(value: string, delay: number) {
 }
 
 interface Props {
-  sessionProp: any
+  sessionProp: Session
 }
 
 const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
   const [inputValue, setInputValue] = useState("")
-  const debouncedValue = useGetUserInputDelay(inputValue, 500)
+  const userInput = useGetUserInputDelay(inputValue, 500)
   const lastSearched = useRef("")
 
-  const { data, isLoading, isFetched } = useQuery({
-    queryKey: ["search", debouncedValue],
-    queryFn: async () => {
-      if (!debouncedValue || debouncedValue === lastSearched.current)
-        return null
-      console.log("Searching: ", debouncedValue)
-      console.log("Session: ", sessionProp)
-      lastSearched.current = debouncedValue
-      const res = await fetch(
-        `http://localhost:3000/api/v1/games/search?game_name=${debouncedValue}`,
-      ).then(
-        (res) =>
-          res.json() as Promise<{
-            message: string
-            games: { name: string; igdbId: number }[]
-          }>,
-      )
-      console.log("Respuesta de la query: ", res)
-      return res
-    },
-    enabled: !!debouncedValue,
+  // TODO: implement loading and error states
+  const { data, isLoading, isFetched, error } = useGetGamesSuggestions({
+    userInput: userInput,
+    lastUserInput: lastSearched.current,
+    sessionToken: sessionProp.session.id,
   })
 
   const { handleInputFocus, isPopoverOpen, inputRef } = useHandlerSearchPopover(

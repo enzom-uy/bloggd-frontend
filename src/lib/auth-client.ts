@@ -5,3 +5,5 @@ export const authClient = createAuthClient({
   baseURL: "http://localhost:4321",
   plugins: [usernameClient()],
 })
+
+export type Session = typeof authClient.$Infer.Session

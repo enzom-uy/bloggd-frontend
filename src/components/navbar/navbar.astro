@@ -1,14 +1,16 @@
 ---
 import { auth } from "@/lib/auth-server"
 import { SearchInput } from "../search-input"
+import type { Session } from "@/lib/auth-client"
 
 const session = await auth.api.getSession({
   headers: Astro.request.headers,
 })
+console.log(session)
 ---
 
 <nav class="flex justify-between py-4">
   <a href="/">Home</a>
-  <SearchInput client:load sessionProp={session} />
-  <div></div>
+  <SearchInput client:load sessionProp={session as Session} />
+  <div>{session && session?.user ? session.user.name : ""}</div>
 </nav>
