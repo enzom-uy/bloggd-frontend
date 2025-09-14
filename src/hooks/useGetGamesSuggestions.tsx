@@ -1,10 +1,16 @@
 import { useQuery } from "@tanstack/react-query"
-import { GAMES_SUGGESTIONS_URL, QUERY_API_BODY } from "@/utils/constants"
+import { API_URLS, QUERY_API_BODY } from "@/utils/constants"
+import type { APIError } from "@/lib/types"
 
 interface Props {
   userInput: string
-  lastUserInput: string
+  lastUserInput?: string
   sessionToken: string
+}
+
+interface GamesSuggestions {
+  message: string
+  games: { name: string; igdbId: number }[]
 }
 
 export const useGetGamesSuggestions = ({
@@ -12,26 +18,22 @@ export const useGetGamesSuggestions = ({
   lastUserInput,
   sessionToken,
 }: Props) => {
-  const url = new URL(GAMES_SUGGESTIONS_URL)
+  const url = new URL(API_URLS.GAMES_SUGGESTIONS)
   url.searchParams.append("game_name", userInput)
   const { data, isLoading, isFetched, error } = useQuery({
-    queryKey: ["gamesSuggestions"],
+    queryKey: ["gamesSuggestions", userInput],
     queryFn: async () => {
-      if (!userInput || userInput === lastUserInput) return null
-      const res = await fetch(
-        url.toString(),
-        QUERY_API_BODY(sessionToken),
-      ).then(
-        (res) =>
-          res.json() as Promise<{
-            message: string
-            games: { name: string; igdbId: number }[]
-          }>,
-      )
+      const res = await fetch(url.toString(), QUERY_API_BODY(sessionToken))
+      if (!res.ok) {
+        const errorData = (await res.json()) as APIError
+        throw new Error(errorData.message[0])
+      }
+      const data = (await res.json()) as GamesSuggestions
 
-      return res
+      return data
     },
-    enabled: !!userInput,
+    enabled: !!userInput && userInput.trim().length > 0,
+    retry: false,
   })
 
   return { data, isLoading, isFetched, error }

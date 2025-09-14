@@ -28,18 +28,22 @@ interface Props {
 const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
   const [inputValue, setInputValue] = useState("")
   const userInput = useGetUserInputDelay(inputValue, 500)
-  const lastSearched = useRef("")
 
-  // TODO: implement loading and error states
+  // TODO: implement error states
   const { data, isLoading, isFetched, error } = useGetGamesSuggestions({
     userInput: userInput,
-    lastUserInput: lastSearched.current,
     sessionToken: sessionProp.session.id,
   })
 
   const { handleInputFocus, isPopoverOpen, inputRef } = useHandlerSearchPopover(
     { data, isLoading },
   )
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value)
+  }
+
+  const games = data?.games
 
   return (
     <div className="flex flex-col gap-4">
@@ -49,7 +53,7 @@ const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
         placeholder="Search..."
         value={inputValue}
         ref={inputRef}
-        onChange={(e) => setInputValue(e.target.value)}
+        onChange={handleInputChange}
         onFocus={handleInputFocus}
         onClick={handleInputFocus}
       />
@@ -60,20 +64,25 @@ const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
           <Command>
             <CommandList>
               {isLoading && "Loading..."}
-              {data && data.games.length > 0 && (
+              {error && <div>{error.message}</div>}
+              {games && games.length > 0 && (
                 <>
                   {data.games.map((game) => (
                     <CommandItem
                       key={game.igdbId}
                       value={`${game.igdbId}`}
-                      onSelect={() => console.log("Selected: ", game.name)}
+                      onSelect={() =>
+                        (window.location.href = `/games/${game.igdbId}`)
+                      }
                     >
                       {game.name} - {game.igdbId}
                     </CommandItem>
                   ))}
                 </>
               )}
-              {data?.games.length === 0 && "No results"}
+              {!isLoading && !error && (!games || games.length === 0) && (
+                <div>No results found</div>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>

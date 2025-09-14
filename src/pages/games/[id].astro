@@ -1,0 +1,27 @@
+---
+import Layout from "@/layouts/Layout.astro"
+import { auth } from "@/lib/auth-server"
+import { fetchGameById } from "@/utils/api.utils"
+
+export const prerender = false
+
+const session = await auth.api.getSession({
+  headers: Astro.request.headers,
+})
+
+const { id: gameId } = Astro.params
+if (!gameId) Astro.redirect("/")
+
+const response = await fetchGameById({
+  id: gameId as string,
+  sessionToken: session ? session.session.id : "",
+})
+
+console.log("Response dentro de la página: ", response)
+---
+
+<Layout>
+  <!-- TODO:implement this -->
+  {!response && <div>No existe el juego</div>}
+  <h1>{response?.game.title}</h1>
+</Layout>
