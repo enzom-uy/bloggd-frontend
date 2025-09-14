@@ -28,8 +28,9 @@ export const useHandlerSearchPopover = ({ data, isLoading }: Props) => {
 
   const handleInputFocus = () => {
     inputRef.current?.focus()
-    if (inputRef.current && inputRef.current.value !== "")
-      return setIsPopoverOpen(true)
+    if (inputRef.current && inputRef.current.value !== "") {
+      setIsPopoverOpen(true)
+    }
 
     if (data && data.games?.length > 0) {
       setIsPopoverOpen(true)
@@ -43,6 +44,8 @@ export const useHandlerSearchPopover = ({ data, isLoading }: Props) => {
       setIsPopoverOpen(true)
     }
   }, [data, isLoading])
+
+  inputRef.current?.focus()
 
   return { isPopoverOpen, inputRef, handleInputFocus }
 }
