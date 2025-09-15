@@ -22,7 +22,7 @@ function useGetUserInputDelay(value: string, delay: number) {
 }
 
 interface Props {
-  sessionProp: Session
+  sessionProp: Session | undefined
 }
 
 const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
@@ -32,7 +32,7 @@ const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
   // TODO: implement error states
   const { data, isLoading, isFetched, error } = useGetGamesSuggestions({
     userInput: userInput,
-    sessionToken: sessionProp.session.id,
+    sessionToken: sessionProp?.session ? sessionProp.session.id : null,
   })
 
   const { handleInputFocus, isPopoverOpen, inputRef } = useHandlerSearchPopover(

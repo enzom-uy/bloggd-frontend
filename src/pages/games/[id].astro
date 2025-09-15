@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro"
 import { auth } from "@/lib/auth-server"
 import { fetchGameById } from "@/utils/api.utils"
+import { GameTitleCard } from "@/components/game-view/game-title-card"
 
 export const prerender = false
 
@@ -17,11 +18,20 @@ const response = await fetchGameById({
   sessionToken: session ? session.session.id : "",
 })
 
-console.log("Response dentro de la página: ", response)
+if (!response || response === undefined) return Astro.redirect("/not-found")
+
+const {
+  title,
+  coverUrl,
+  createdAt,
+  description,
+  developer,
+  publisher,
+  releaseDate,
+  slug,
+} = response.game
 ---
 
-<Layout>
-  <!-- TODO:implement this -->
-  {!response && <div>No existe el juego</div>}
-  <h1>{response?.game.title}</h1>
+<Layout title={title}>
+  <GameTitleCard userSession={session?.user} game={response.game} />
 </Layout>

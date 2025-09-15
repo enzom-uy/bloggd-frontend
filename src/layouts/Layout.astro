@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css"
 import Navbar from "../components/navbar/navbar.astro"
+const { title } = Astro.props
 ---
 
 <!doctype html>
@@ -10,19 +11,19 @@ import Navbar from "../components/navbar/navbar.astro"
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>Bloggd</title>
-  </head>
+    <title>{title ? title + " - Bloggd" : "Bloggd"}</title></head
+  >
   <body class="dark">
     <Navbar />
     <slot />
   </body>
-</html>
 
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>
+  <style>
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</html>

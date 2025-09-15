@@ -5,7 +5,7 @@ import type { APIError } from "@/lib/types"
 interface Props {
   userInput: string
   lastUserInput?: string
-  sessionToken: string
+  sessionToken?: string | null
 }
 
 interface GamesSuggestions {

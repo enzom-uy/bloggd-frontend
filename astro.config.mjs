@@ -5,8 +5,6 @@ import react from "@astrojs/react"
 
 import tailwindcss from "@tailwindcss/vite"
 
-console.log(process.env.DATABASE_URL)
-
 // https://astro.build/config
 export default defineConfig({
   integrations: [react()],
