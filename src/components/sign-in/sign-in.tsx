@@ -16,7 +16,7 @@ export const SignIn = () => {
     if (error) {
       console.log("error: ", error)
     }
-    window.location.href = "/signed-in"
+    window.location.href = "/"
   }
   return (
     <div>

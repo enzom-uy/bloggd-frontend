@@ -1,12 +1,17 @@
 ---
+import { auth } from "@/lib/auth-server"
 import Layout from "../layouts/Layout.astro"
+import { UnauthedContent } from "@/components/homepage/unauthed-content"
+
+const session = await auth.api.getSession({
+  headers: Astro.request.headers,
+})
+
+console.log("Session from index: ", session)
 
 export const prerender = false
 ---
 
 <Layout>
-  <div
-    class="flex min-h-screen max-w-72 min-w-screen items-center justify-center"
-  >
-  </div>
+  {session ? <h1>Logged in</h1> : <UnauthedContent />}
 </Layout>

@@ -16,15 +16,17 @@ interface Props {
   currentUrl: string
 }
 
+type NavItem = { href: string; label: string }
+
 // Datos compartidos
 const getNavItems = (session: Session | null) => ({
   authLinks: session
-    ? [{ href: "/profile", label: session.user.username }]
-    : [
+    ? ([{ href: "/profile", label: session.user.username }] as Array<NavItem>)
+    : ([
         { href: "/sign-in", label: "Sign in" },
         { href: "/sign-up", label: "Sign up" },
-      ],
-  navigationLinks: [{ href: "/games", label: "Games" }],
+      ] as Array<NavItem>),
+  navigationLinks: [{ href: "/games", label: "Games" }] as Array<NavItem>,
 })
 
 export const NavbarContent: React.FC<Props> = ({ session }) => {
@@ -69,6 +71,10 @@ export const NavbarContent: React.FC<Props> = ({ session }) => {
                 <a href={link.href}>{link.label}</a>
               </DropdownMenuItem>
             ))}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              {/* TODO: Sign out feature*/}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
