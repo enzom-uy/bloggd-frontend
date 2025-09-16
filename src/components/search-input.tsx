@@ -36,7 +36,7 @@ const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
   })
 
   const { handleInputFocus, isPopoverOpen, inputRef } = useHandlerSearchPopover(
-    { data, isLoading },
+    { data, isLoading, error },
   )
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +46,7 @@ const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
   const games = data?.games
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col">
       <Input
         className="max-w-80"
         type="search"
@@ -58,35 +58,37 @@ const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
         onClick={handleInputFocus}
       />
 
-      <Popover open={isPopoverOpen}>
-        <PopoverTrigger></PopoverTrigger>
-        <PopoverContent>
-          <Command>
-            <CommandList>
-              {isLoading && "Loading..."}
-              {error && <div>{error.message}</div>}
-              {games && games.length > 0 && (
-                <>
-                  {data.games.map((game) => (
-                    <CommandItem
-                      key={game.igdbId}
-                      value={`${game.igdbId}`}
-                      onSelect={() =>
-                        (window.location.href = `/games/${game.igdbId}`)
-                      }
-                    >
-                      {game.name} - {game.igdbId}
-                    </CommandItem>
-                  ))}
-                </>
-              )}
-              {!isLoading && !error && (!games || games.length === 0) && (
-                <div>No results found</div>
-              )}
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+      {error ? null : (
+        <Popover open={isPopoverOpen}>
+          <PopoverTrigger></PopoverTrigger>
+          <PopoverContent className="mt-1">
+            <Command>
+              <CommandList>
+                {isLoading && "Loading..."}
+                {/* {error && <div>{error.message}</div>} */}
+                {games && games.length > 0 && (
+                  <>
+                    {data.games.map((game) => (
+                      <CommandItem
+                        key={game.igdbId}
+                        value={`${game.igdbId}`}
+                        onSelect={() =>
+                          (window.location.href = `/games/${game.igdbId}`)
+                        }
+                      >
+                        {game.name} - {game.igdbId}
+                      </CommandItem>
+                    ))}
+                  </>
+                )}
+                {!isLoading && !error && (!games || games.length === 0) && (
+                  <div>No results found</div>
+                )}
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      )}
 
       <div className="flex flex-col gap-2"></div>
     </div>

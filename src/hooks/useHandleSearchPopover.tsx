@@ -6,13 +6,15 @@ interface Props {
     | null
     | undefined
   isLoading: boolean
+  error: Error | null
 }
 
-export const useHandlerSearchPopover = ({ data, isLoading }: Props) => {
+export const useHandlerSearchPopover = ({ data, isLoading, error }: Props) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
+    if (!data) return
     function handleClickOutside(event: MouseEvent) {
       if (
         inputRef.current &&
@@ -27,6 +29,7 @@ export const useHandlerSearchPopover = ({ data, isLoading }: Props) => {
   }, [])
 
   const handleInputFocus = () => {
+    if (!data) return
     inputRef.current?.focus()
     if (inputRef.current && inputRef.current.value !== "") {
       setIsPopoverOpen(true)
@@ -40,10 +43,10 @@ export const useHandlerSearchPopover = ({ data, isLoading }: Props) => {
   }
 
   useEffect(() => {
-    if ((data && data.games?.length > 0) || isLoading) {
+    if (isLoading) {
       setIsPopoverOpen(true)
     }
-  }, [data, isLoading])
+  }, [isLoading])
 
   inputRef.current?.focus()
 
