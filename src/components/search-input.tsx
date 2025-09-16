@@ -22,14 +22,14 @@ function useGetUserInputDelay(value: string, delay: number) {
 }
 
 interface Props {
-  sessionProp: Session | undefined
+  sessionProp: Session | null
 }
 
 const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
   const [inputValue, setInputValue] = useState("")
   const userInput = useGetUserInputDelay(inputValue, 500)
 
-  // TODO: implement error states
+  // TODO: show error toast when error is not null
   const { data, isLoading, isFetched, error } = useGetGamesSuggestions({
     userInput: userInput,
     sessionToken: sessionProp?.session ? sessionProp.session.id : null,

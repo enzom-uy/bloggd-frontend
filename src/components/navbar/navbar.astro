@@ -1,16 +1,23 @@
 ---
 import { auth } from "@/lib/auth-server"
-import { SearchInput } from "../search-input"
+import { NavbarContent } from "./navbar-content"
 import type { Session } from "@/lib/auth-client"
 
 const session = await auth.api.getSession({
   headers: Astro.request.headers,
 })
-console.log(session)
+const currentUrl = Astro.url.pathname
 ---
 
-<nav class="flex justify-between py-4">
-  <a href="/">Home</a>
-  <SearchInput client:load sessionProp={session as Session} />
-  <div>{session && session?.user ? session.user.name : ""}</div>
+<nav
+  class={`flex ${currentUrl === "/" ? "justify-end" : "justify-between"} py-4 items-center gap-4`}
+>
+  {currentUrl === "/" ? null : <a href="/">Backloggd</a>}
+  <div class="flex items-center gap-4">
+    <NavbarContent
+      session={session as Session}
+      currentUrl={currentUrl}
+      client:load
+    />
+  </div>
 </nav>

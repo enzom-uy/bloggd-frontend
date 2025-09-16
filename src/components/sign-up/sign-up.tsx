@@ -54,6 +54,4 @@ export const SignUp = () => {
   )
 }
 
-export const SignUpWrapper = () => {
-  return <SignUp />
-}
+export default SignUp

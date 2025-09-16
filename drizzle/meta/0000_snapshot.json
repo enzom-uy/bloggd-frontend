@@ -131,12 +131,8 @@
           "tableFrom": "howlongtobeat_data",
           "tableTo": "games",
           "schemaTo": "public",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["game_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -177,12 +173,8 @@
           "tableFrom": "game_genres",
           "tableTo": "games",
           "schemaTo": "public",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["game_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -191,12 +183,8 @@
           "tableFrom": "game_genres",
           "tableTo": "genres",
           "schemaTo": "public",
-          "columnsFrom": [
-            "genre_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["genre_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -204,10 +192,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "game_genres_game_genre_unique": {
-          "columns": [
-            "game_id",
-            "genre_id"
-          ],
+          "columns": ["game_id", "genre_id"],
           "nullsNotDistinct": false,
           "name": "game_genres_game_genre_unique"
         }
@@ -253,12 +238,8 @@
           "tableFrom": "review_likes",
           "tableTo": "reviews",
           "schemaTo": "public",
-          "columnsFrom": [
-            "review_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["review_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -267,12 +248,8 @@
           "tableFrom": "review_likes",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -280,10 +257,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "review_likes_user_review_unique": {
-          "columns": [
-            "review_id",
-            "user_id"
-          ],
+          "columns": ["review_id", "user_id"],
           "nullsNotDistinct": false,
           "name": "review_likes_user_review_unique"
         }
@@ -349,12 +323,8 @@
           "tableFrom": "collections",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -412,12 +382,8 @@
           "tableFrom": "game_platforms",
           "tableTo": "games",
           "schemaTo": "public",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["game_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -425,9 +391,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "game_platforms_platform_name_key": {
-          "columns": [
-            "platform_name"
-          ],
+          "columns": ["platform_name"],
           "nullsNotDistinct": false,
           "name": "game_platforms_platform_name_key"
         }
@@ -490,12 +454,8 @@
           "tableFrom": "game_stats",
           "tableTo": "games",
           "schemaTo": "public",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["game_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -616,16 +576,12 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "games_igdb_id_unique": {
-          "columns": [
-            "igdb_id"
-          ],
+          "columns": ["igdb_id"],
           "nullsNotDistinct": false,
           "name": "games_igdb_id_unique"
         },
         "games_slug_unique": {
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "nullsNotDistinct": false,
           "name": "games_slug_unique"
         }
@@ -683,12 +639,8 @@
           "tableFrom": "user_activity",
           "tableTo": "games",
           "schemaTo": "public",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["game_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -697,12 +649,8 @@
           "tableFrom": "user_activity",
           "tableTo": "reviews",
           "schemaTo": "public",
-          "columnsFrom": [
-            "review_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["review_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -711,12 +659,8 @@
           "tableFrom": "user_activity",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -725,12 +669,8 @@
           "tableFrom": "user_activity",
           "tableTo": "games",
           "schemaTo": "public",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["game_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -739,12 +679,8 @@
           "tableFrom": "user_activity",
           "tableTo": "reviews",
           "schemaTo": "public",
-          "columnsFrom": [
-            "review_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["review_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -753,12 +689,8 @@
           "tableFrom": "user_activity",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -871,12 +803,8 @@
           "tableFrom": "reviews",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -885,12 +813,8 @@
           "tableFrom": "reviews",
           "tableTo": "games",
           "schemaTo": "public",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["game_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -898,10 +822,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "reviews_user_game_unique": {
-          "columns": [
-            "user_id",
-            "game_id"
-          ],
+          "columns": ["user_id", "game_id"],
           "nullsNotDistinct": false,
           "name": "reviews_user_game_unique"
         }
@@ -959,12 +880,8 @@
           "tableFrom": "users_social_links",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -1005,12 +922,8 @@
           "tableFrom": "collection_games",
           "tableTo": "collections",
           "schemaTo": "public",
-          "columnsFrom": [
-            "collection_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["collection_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1019,12 +932,8 @@
           "tableFrom": "collection_games",
           "tableTo": "games",
           "schemaTo": "public",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["game_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1032,10 +941,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "collection_games_collection_game_unique": {
-          "columns": [
-            "collection_id",
-            "game_id"
-          ],
+          "columns": ["collection_id", "game_id"],
           "nullsNotDistinct": false,
           "name": "collection_games_collection_game_unique"
         }
@@ -1142,16 +1048,12 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "users_username_key": {
-          "columns": [
-            "username"
-          ],
+          "columns": ["username"],
           "nullsNotDistinct": false,
           "name": "users_username_key"
         },
         "users_email_key": {
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "nullsNotDistinct": false,
           "name": "users_email_key"
         }
@@ -1205,10 +1107,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "genres_name_slug_unique": {
-          "columns": [
-            "name",
-            "slug"
-          ],
+          "columns": ["name", "slug"],
           "nullsNotDistinct": false,
           "name": "genres_name_slug_unique"
         }
@@ -1306,12 +1205,8 @@
           "tableFrom": "user_games",
           "tableTo": "users",
           "schemaTo": "public",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1320,12 +1215,8 @@
           "tableFrom": "user_games",
           "tableTo": "games",
           "schemaTo": "public",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["game_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1333,10 +1224,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "user_games_user_game_unique": {
-          "columns": [
-            "user_id",
-            "game_id"
-          ],
+          "columns": ["user_id", "game_id"],
           "nullsNotDistinct": false,
           "name": "user_games_user_game_unique"
         }
@@ -1349,22 +1237,12 @@
   "enums": {
     "public.activity_type": {
       "name": "activity_type",
-      "values": [
-        "add_review",
-        "start_game",
-        "finish_game",
-        "drop_game"
-      ],
+      "values": ["add_review", "start_game", "finish_game", "drop_game"],
       "schema": "public"
     },
     "public.user_game_status": {
       "name": "user_game_status",
-      "values": [
-        "backlog",
-        "playing",
-        "played",
-        "dropped"
-      ],
+      "values": ["backlog", "playing", "played", "dropped"],
       "schema": "public"
     }
   },

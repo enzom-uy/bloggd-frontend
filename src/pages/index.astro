@@ -1,9 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro"
-import { SignUpWrapper } from "@/components/sign-up/sign-up"
-import { SignIn } from "@/components/sign-in/sign-in"
-import { SearchInput } from "@/components/search-input"
-import { SignOut } from "@/components/sign-out/sign-out"
 
 export const prerender = false
 ---
@@ -12,14 +8,5 @@ export const prerender = false
   <div
     class="flex min-h-screen max-w-72 min-w-screen items-center justify-center"
   >
-    <SignUpWrapper client:load />
-    <div class="bg-slate-800">
-      Sign In
-      <SignIn client:load />
-    </div>
-    <div>
-      <h2>Sign Out</h2>
-      <SignOut client:load />
-    </div>
   </div>
 </Layout>
