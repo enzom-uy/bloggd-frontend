@@ -10,6 +10,7 @@ import {
 } from "../ui/dropdown-menu"
 import { Button } from "../ui/button"
 import { MenuIcon } from "lucide-react"
+import { authClient } from "@/lib/auth-client"
 
 interface Props {
   session: Session | null
@@ -31,6 +32,15 @@ const getNavItems = (session: Session | null) => ({
 
 export const NavbarContent: React.FC<Props> = ({ session }) => {
   const { authLinks, navigationLinks } = getNavItems(session)
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          window.location.href = "/"
+        },
+      },
+    })
+  }
 
   return (
     <>
@@ -71,10 +81,14 @@ export const NavbarContent: React.FC<Props> = ({ session }) => {
                 <a href={link.href}>{link.label}</a>
               </DropdownMenuItem>
             ))}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              {/* TODO: Sign out feature*/}
-            </DropdownMenuItem>
+            {session && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  Sign out
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

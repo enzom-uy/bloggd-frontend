@@ -1,7 +1,7 @@
 ---
 import { auth } from "@/lib/auth-server"
 import Layout from "../layouts/Layout.astro"
-import { UnauthedContent } from "@/components/homepage/unauthed-content"
+import UnauthedContent from "@/components/homepage/unauthed-content.astro"
 
 const session = await auth.api.getSession({
   headers: Astro.request.headers,
