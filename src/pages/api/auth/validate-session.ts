@@ -6,11 +6,9 @@ export const prerender = false
 export const GET: APIRoute = async (context: APIContext) => {
   const { request } = context
   console.log("Request: ", request)
-  const token = "sdfjnasdkfjnasdf"
   const userSession = await auth.api.getSession({
     headers: request.headers,
   })
-  console.log("Session: ", userSession)
 
   if (!userSession?.user) {
     return new Response(

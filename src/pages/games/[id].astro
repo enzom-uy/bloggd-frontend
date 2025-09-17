@@ -1,5 +1,9 @@
 ---
 import Layout from "@/layouts/Layout.astro"
+import { GameStats } from "@/components/game-view/game-stats"
+import { GameStatsSkeleton } from "@/components/game-view/game-stats-skeleton"
+import { GameContent } from "@/components/game-view/game-content"
+
 import { auth } from "@/lib/auth-server"
 import { fetchGameById } from "@/utils/api.utils"
 import { GameTitleCard } from "@/components/game-view/game-title-card"
@@ -10,7 +14,7 @@ const session = await auth.api.getSession({
   headers: Astro.request.headers,
 })
 
-const { id: gameId } = Astro.params
+const { id: gameId } = Astro.params as { id: string }
 if (!gameId) Astro.redirect("/")
 
 const response = await fetchGameById({
@@ -33,5 +37,17 @@ const {
 ---
 
 <Layout title={title}>
-  <GameTitleCard userSession={session?.user} game={response.game} />
+  <div class="flex gap-8">
+    <div class="flex flex-col items-center gap-4">
+      <GameTitleCard userSession={session?.user} game={response.game} />
+      <GameStats
+        server:defer
+        igdbId={gameId}
+        sessionToken={session?.session.id}
+      >
+        <GameStatsSkeleton slot="fallback" />
+      </GameStats>
+    </div>
+    <GameContent game={response.game} />
+  </div>
 </Layout>

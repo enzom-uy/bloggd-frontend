@@ -7,8 +7,6 @@ const session = await auth.api.getSession({
   headers: Astro.request.headers,
 })
 
-console.log("Session from index: ", session)
-
 export const prerender = false
 ---
 

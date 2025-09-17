@@ -6,7 +6,6 @@ import type { Session } from "@/lib/auth-client"
 const session = await auth.api.getSession({
   headers: Astro.request.headers,
 })
-console.log("session from navbar: ", session)
 const currentUrl = Astro.url.pathname
 ---
 

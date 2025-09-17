@@ -6,8 +6,6 @@ export const SignIn = () => {
   const [password, setPassword] = useState("")
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("email: ", email)
-    console.log("password: ", password)
     const { data, error } = await authClient.signIn.email({
       email: email,
       password: password,

@@ -1,4 +1,4 @@
-import type { games } from "drizzle/schema"
+import { games, gameStats } from "drizzle/schema"
 import { API_URLS, QUERY_API_BODY } from "./constants"
 
 interface Props {
@@ -15,8 +15,6 @@ export const fetchGameById = async ({
     QUERY_API_BODY(sessionToken),
   ).then((res) => res.json())
 
-  console.log("Response from fetchGameById: ", response)
-
   if (!response.game) return undefined
 
   return response as FetchGameSuccess
@@ -25,4 +23,16 @@ export const fetchGameById = async ({
 export interface FetchGameSuccess {
   message: string
   game: typeof games.$inferSelect
+}
+
+export const fetchGameStats = async ({ id, sessionToken }: Props) => {
+  const getStatsUrl = new URL(
+    `${API_URLS.BASE_URL}/games/${id}/stats`,
+  ).toString()
+  const response = await fetch(getStatsUrl, QUERY_API_BODY(sessionToken)).then(
+    (res) => res.json(),
+  )
+
+  if (!response) return
+  return response as typeof gameStats.$inferSelect
 }
