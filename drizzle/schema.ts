@@ -149,24 +149,43 @@ export const collections = pgTable(
   ],
 )
 
+export const platforms = pgTable(
+  "platforms",
+  {
+    id: varchar({ length: 36 }).primaryKey().notNull(),
+    name: varchar({ length: 50 }).notNull(),
+    slug: varchar({ length: 100 }).notNull(),
+    abbreviation: varchar({ length: 20 }).notNull(),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+  },
+  (table) => [
+    index("idx_platforms_slug").using(
+      "btree",
+      table.slug.asc().nullsLast().op("text_ops"),
+    ),
+    unique("platforms_name_slug_unique").on(table.name, table.slug),
+    unique("platforms_abbreviation_unique").on(table.abbreviation),
+  ],
+)
+
 export const gamePlatforms = pgTable(
   "game_platforms",
   {
     id: varchar({ length: 36 }).primaryKey().notNull(),
     gameId: varchar("game_id", { length: 36 }).notNull(),
-    platformName: varchar("platform_name", { length: 50 }).notNull(),
+    platformId: varchar("platform_id", { length: 36 }).notNull(),
   },
   (table) => [
-    index("idx_game_platforms_platform_name").using(
-      "btree",
-      table.platformName.asc().nullsLast().op("text_ops"),
-    ),
     foreignKey({
       columns: [table.gameId],
       foreignColumns: [games.id],
       name: "game_platforms_game_id_fkey",
     }),
-    unique("game_platforms_platform_name_key").on(table.platformName),
+    foreignKey({
+      columns: [table.platformId],
+      foreignColumns: [platforms.id],
+      name: "game_platforms_platform_id_fkey",
+    }),
   ],
 )
 
@@ -365,10 +384,8 @@ export const users = pgTable(
     steamId: varchar("steam_id", { length: 50 }),
     profile_picture_url: text("profile_picture_url"),
     bio: text(),
-    createdAt: timestamp("created_at", { mode: "date" }) // Cambiar a "date"
-      .defaultNow()
-      .notNull(),
-    updatedAt: timestamp("updated_at", { mode: "date" }), // Cambiar a "date"
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { mode: "date" }),
   },
   (table) => [
     index("idx_users_email").using(
@@ -391,11 +408,11 @@ export const userSessions = pgTable(
     id: varchar({ length: 36 }).primaryKey().notNull(),
     userId: varchar("user_id", { length: 36 }).notNull(),
     token: varchar("token", { length: 255 }).notNull(),
-    expiresAt: timestamp("expires_at", { mode: "date" }).notNull(), // Cambiar a "date"
+    expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
     ipAddress: varchar("ip_address", { length: 50 }),
     userAgent: varchar("user_agent", { length: 255 }),
-    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(), // Cambiar a "date"
-    updatedAt: timestamp("updated_at", { mode: "date" }), // Cambiar a "date"
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date" }),
   },
   (table) => [
     unique("user_sessions_token_key").on(table.token),
@@ -417,16 +434,16 @@ export const accounts = pgTable(
     accessToken: varchar("access_token", { length: 255 }),
     refreshToken: varchar("refresh_token", { length: 255 }),
     accessTokenExpiresAt: timestamp("access_token_expires_at", {
-      mode: "date", // Cambiar a "date"
+      mode: "date",
     }),
     refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
-      mode: "date", // Cambiar a "date"
+      mode: "date",
     }),
     scope: varchar("scope", { length: 255 }),
     idToken: varchar("id_token", { length: 255 }),
     password: varchar("password", { length: 255 }),
-    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(), // Cambiar a "date"
-    updatedAt: timestamp("updated_at", { mode: "date" }), // Cambiar a "date"
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date" }),
   },
   (table) => [
     index("idx_accounts_user_id").using(
@@ -450,9 +467,9 @@ export const verifications = pgTable("verifications", {
   id: varchar({ length: 36 }).primaryKey().notNull(),
   identifier: varchar("identifier", { length: 100 }).notNull(),
   value: varchar("value", { length: 100 }).notNull(),
-  expiresAt: timestamp("expires_at", { mode: "date" }).notNull(), // Cambiar a "date"
-  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(), // Cambiar a "date"
-  updatedAt: timestamp("updated_at", { mode: "date" }), // Cambiar a "date"
+  expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "date" }),
 })
 
 export const genres = pgTable(
