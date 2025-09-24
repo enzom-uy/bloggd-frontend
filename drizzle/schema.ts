@@ -13,11 +13,6 @@ import {
   date,
   pgEnum,
 } from "drizzle-orm/pg-core"
-import { sql } from "drizzle-orm"
-
-export const USER_ROLES = ["user", "supporter", "admin"] as const
-
-export const userRole = pgEnum("user_role", USER_ROLES)
 
 export const activityType = pgEnum("activity_type", [
   "add_review",
@@ -31,6 +26,7 @@ export const userGameStatus = pgEnum("user_game_status", [
   "played",
   "dropped",
 ])
+export const userRole = pgEnum("user_role", ["user", "supporter", "admin"])
 
 export const howlongtobeatData = pgTable(
   "howlongtobeat_data",
@@ -76,7 +72,77 @@ export const howlongtobeatData = pgTable(
       columns: [table.gameId],
       foreignColumns: [games.id],
       name: "howlongtobeat_data_game_id_fkey",
+    }).onDelete("cascade"),
+  ],
+)
+
+export const verifications = pgTable("verifications", {
+  id: varchar({ length: 36 }).primaryKey().notNull(),
+  identifier: varchar({ length: 100 }).notNull(),
+  value: varchar({ length: 100 }).notNull(),
+  expiresAt: timestamp("expires_at", { mode: "string" }).notNull(),
+  createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
+  updatedAt: timestamp("updated_at", { mode: "string" }),
+})
+
+export const accounts = pgTable(
+  "accounts",
+  {
+    id: varchar({ length: 36 }).primaryKey().notNull(),
+    userId: varchar("user_id", { length: 36 }).notNull(),
+    accountId: varchar("account_id", { length: 50 }).notNull(),
+    providerId: varchar("provider_id", { length: 50 }).notNull(),
+    accessToken: varchar("access_token", { length: 255 }),
+    refreshToken: varchar("refresh_token", { length: 255 }),
+    accessTokenExpiresAt: timestamp("access_token_expires_at", {
+      mode: "string",
     }),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
+      mode: "string",
+    }),
+    scope: varchar({ length: 255 }),
+    idToken: varchar("id_token", { length: 255 }),
+    password: varchar({ length: 255 }),
+    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "string" }),
+  },
+  (table) => [
+    index("idx_accounts_account_id").using(
+      "btree",
+      table.accountId.asc().nullsLast().op("text_ops"),
+    ),
+    index("idx_accounts_user_id").using(
+      "btree",
+      table.userId.asc().nullsLast().op("text_ops"),
+    ),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "accounts_user_id_fkey",
+    }).onDelete("cascade"),
+    unique("accounts_account_id_key").on(table.accountId),
+  ],
+)
+
+export const userSessions = pgTable(
+  "user_sessions",
+  {
+    id: varchar({ length: 36 }).primaryKey().notNull(),
+    userId: varchar("user_id", { length: 36 }).notNull(),
+    token: varchar({ length: 255 }).notNull(),
+    expiresAt: timestamp("expires_at", { mode: "string" }).notNull(),
+    ipAddress: varchar("ip_address", { length: 50 }),
+    userAgent: varchar("user_agent", { length: 255 }),
+    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "string" }),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "user_sessions_user_id_fkey",
+    }).onDelete("cascade"),
+    unique("user_sessions_token_key").on(table.token),
   ],
 )
 
@@ -149,31 +215,12 @@ export const collections = pgTable(
   ],
 )
 
-export const platforms = pgTable(
-  "platforms",
-  {
-    id: varchar({ length: 36 }).primaryKey().notNull(),
-    name: varchar({ length: 50 }).notNull(),
-    slug: varchar({ length: 100 }).notNull(),
-    abbreviation: varchar({ length: 20 }).notNull(),
-    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
-  },
-  (table) => [
-    index("idx_platforms_slug").using(
-      "btree",
-      table.slug.asc().nullsLast().op("text_ops"),
-    ),
-    unique("platforms_name_slug_unique").on(table.name, table.slug),
-    unique("platforms_abbreviation_unique").on(table.abbreviation),
-  ],
-)
-
 export const gamePlatforms = pgTable(
   "game_platforms",
   {
     id: varchar({ length: 36 }).primaryKey().notNull(),
     gameId: varchar("game_id", { length: 36 }).notNull(),
-    platformId: varchar("platform_id", { length: 36 }).notNull(),
+    platformId: varchar("platform_id", { length: 50 }).notNull(),
   },
   (table) => [
     foreignKey({
@@ -205,7 +252,7 @@ export const gameStats = pgTable(
       columns: [table.gameId],
       foreignColumns: [games.id],
       name: "game_stats_game_id_fkey",
-    }),
+    }).onDelete("cascade"),
   ],
 )
 
@@ -346,46 +393,23 @@ export const usersSocialLinks = pgTable(
   ],
 )
 
-export const collectionGames = pgTable(
-  "collection_games",
-  {
-    id: varchar({ length: 36 }).primaryKey().notNull(),
-    collectionId: varchar("collection_id", { length: 36 }).notNull(),
-    gameId: varchar("game_id", { length: 36 }).notNull(),
-  },
-  (table) => [
-    foreignKey({
-      columns: [table.collectionId],
-      foreignColumns: [collections.id],
-      name: "collection_games_collection_id_fkey",
-    }),
-    foreignKey({
-      columns: [table.gameId],
-      foreignColumns: [games.id],
-      name: "collection_games_game_id_fkey",
-    }),
-    unique("collection_games_collection_game_unique").on(
-      table.collectionId,
-      table.gameId,
-    ),
-  ],
-)
-
 export const users = pgTable(
   "users",
   {
     id: varchar({ length: 36 }).primaryKey().notNull(),
     username: varchar({ length: 50 }).notNull(),
-    displayUsername: varchar("display_username", { length: 50 }).notNull(),
     email: varchar({ length: 255 }).notNull(),
-    email_verified: boolean("email_verified").default(false).notNull(),
-    password_hash: varchar("password_hash", { length: 255 }),
-    role: userRole().notNull(),
+    passwordHash: varchar("password_hash", { length: 255 }),
     steamId: varchar("steam_id", { length: 50 }),
-    profile_picture_url: text("profile_picture_url"),
+    profilePictureUrl: text("profile_picture_url"),
     bio: text(),
-    createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
-    updatedAt: timestamp("updated_at", { mode: "date" }),
+    createdAt: timestamp("created_at", { mode: "string" })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { mode: "string" }),
+    emailVerified: boolean("email_verified").default(false).notNull(),
+    role: userRole().notNull(),
+    displayUsername: varchar("display_username", { length: 50 }).notNull(),
   },
   (table) => [
     index("idx_users_email").using(
@@ -402,75 +426,30 @@ export const users = pgTable(
   ],
 )
 
-export const userSessions = pgTable(
-  "user_sessions",
+export const collectionGames = pgTable(
+  "collection_games",
   {
     id: varchar({ length: 36 }).primaryKey().notNull(),
-    userId: varchar("user_id", { length: 36 }).notNull(),
-    token: varchar("token", { length: 255 }).notNull(),
-    expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
-    ipAddress: varchar("ip_address", { length: 50 }),
-    userAgent: varchar("user_agent", { length: 255 }),
-    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
-    updatedAt: timestamp("updated_at", { mode: "date" }),
+    collectionId: varchar("collection_id", { length: 36 }).notNull(),
+    gameId: varchar("game_id", { length: 36 }).notNull(),
   },
   (table) => [
-    unique("user_sessions_token_key").on(table.token),
     foreignKey({
-      columns: [table.userId],
-      foreignColumns: [users.id],
-      name: "user_sessions_user_id_fkey",
+      columns: [table.collectionId],
+      foreignColumns: [collections.id],
+      name: "collection_games_collection_id_fkey",
     }).onDelete("cascade"),
+    foreignKey({
+      columns: [table.gameId],
+      foreignColumns: [games.id],
+      name: "collection_games_game_id_fkey",
+    }).onDelete("cascade"),
+    unique("collection_games_collection_game_unique").on(
+      table.collectionId,
+      table.gameId,
+    ),
   ],
 )
-
-export const accounts = pgTable(
-  "accounts",
-  {
-    id: varchar({ length: 36 }).primaryKey().notNull(),
-    userId: varchar("user_id", { length: 36 }).notNull(),
-    accountId: varchar("account_id", { length: 50 }).notNull(),
-    providerId: varchar("provider_id", { length: 50 }).notNull(),
-    accessToken: varchar("access_token", { length: 255 }),
-    refreshToken: varchar("refresh_token", { length: 255 }),
-    accessTokenExpiresAt: timestamp("access_token_expires_at", {
-      mode: "date",
-    }),
-    refreshTokenExpiresAt: timestamp("refresh_token_expires_at", {
-      mode: "date",
-    }),
-    scope: varchar("scope", { length: 255 }),
-    idToken: varchar("id_token", { length: 255 }),
-    password: varchar("password", { length: 255 }),
-    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
-    updatedAt: timestamp("updated_at", { mode: "date" }),
-  },
-  (table) => [
-    index("idx_accounts_user_id").using(
-      "btree",
-      table.userId.asc().nullsLast().op("text_ops"),
-    ),
-    index("idx_accounts_account_id").using(
-      "btree",
-      table.accountId.asc().nullsLast().op("text_ops"),
-    ),
-    unique("accounts_account_id_key").on(table.accountId),
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [users.id],
-      name: "accounts_user_id_fkey",
-    }).onDelete("cascade"),
-  ],
-)
-
-export const verifications = pgTable("verifications", {
-  id: varchar({ length: 36 }).primaryKey().notNull(),
-  identifier: varchar("identifier", { length: 100 }).notNull(),
-  value: varchar("value", { length: 100 }).notNull(),
-  expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
-  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: "date" }),
-})
 
 export const genres = pgTable(
   "genres",
@@ -485,6 +464,25 @@ export const genres = pgTable(
       table.slug.asc().nullsLast().op("text_ops"),
     ),
     unique("genres_name_slug_unique").on(table.name, table.slug),
+  ],
+)
+
+export const platforms = pgTable(
+  "platforms",
+  {
+    id: varchar({ length: 36 }).primaryKey().notNull(),
+    name: varchar({ length: 50 }).notNull(),
+    slug: varchar({ length: 100 }).notNull(),
+    abbreviation: varchar({ length: 20 }).notNull(),
+    createdAt: timestamp("created_at", { mode: "string" }).defaultNow(),
+  },
+  (table) => [
+    index("idx_platforms_slug").using(
+      "btree",
+      table.slug.asc().nullsLast().op("text_ops"),
+    ),
+    unique("platforms_name_slug_unique").on(table.name, table.slug),
+    unique("platforms_abbreviation_unique").on(table.abbreviation),
   ],
 )
 
@@ -512,12 +510,12 @@ export const userGames = pgTable(
       columns: [table.userId],
       foreignColumns: [users.id],
       name: "user_games_user_id_fkey",
-    }),
+    }).onDelete("cascade"),
     foreignKey({
       columns: [table.gameId],
       foreignColumns: [games.id],
       name: "user_games_game_id_fkey",
-    }),
+    }).onDelete("cascade"),
     unique("user_games_user_game_unique").on(table.userId, table.gameId),
   ],
 )

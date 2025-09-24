@@ -50,6 +50,13 @@
       "when": 1757626298843,
       "tag": "0006_short_snowbird",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1758732067327,
+      "tag": "0007_fair_golden_guardian",
+      "breakpoints": true
     }
   ]
 }
