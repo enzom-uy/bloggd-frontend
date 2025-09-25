@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { GameStatsLi } from "@/components/game-view/game-stats-li"
-import { fetchGameStats } from "@/utils/api.utils"
+import { fetchGameStats } from "@/api/games"
 import { Gamepad2, Play, Library, Trash2 } from "lucide-react"
 
 interface Props {

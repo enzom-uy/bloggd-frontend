@@ -1,5 +1,5 @@
 import { games, gameStats } from "drizzle/schema"
-import { API_URLS, QUERY_API_BODY } from "./constants"
+import { API_URLS, QUERY_API_BODY } from "@/utils/constants"
 
 interface Props {
   id: string
