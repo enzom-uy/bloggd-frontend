@@ -8,20 +8,28 @@ interface Props {
 }
 
 export const GameTitleCard = ({ userSession, game }: Props) => {
+  const date = DateTime.fromISO(game.releaseDate as string)
+  const formattedDate = date.toLocaleString(DateTime.DATE_FULL)
   return (
     <>
-      <div className="flex gap-4">
+      <div className="flex items-start gap-8">
         {game.coverUrl ? (
           <img
             src={game.coverUrl}
             alt="Cover image for the game"
-            className="max-w-48 rounded border"
+            className="h-auto max-h-64 w-full min-w-40 rounded object-contain"
           />
         ) : (
           <div className="flex h-64 w-48 items-center justify-center overflow-hidden rounded bg-zinc-800 p-8 text-center">
             {game.title}
           </div>
         )}
+        <div className="max-w-80 lg:hidden">
+          <h1 className="text-lg">{game.title}</h1>
+          <p className="text-accent-foreground/50 text-sm">
+            Released on {formattedDate} by {game.developer}, {game.publisher}
+          </p>
+        </div>
       </div>
       {/* TODO: implement*/}
       {userSession ? (
