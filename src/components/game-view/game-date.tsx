@@ -4,7 +4,7 @@ const Highlight = ({ children }: { children: React.ReactNode }) => {
 }
 
 interface Props {
-  date: string
+  date: string | null
   developer: string | null
   publisher: string | null
 }
@@ -12,7 +12,7 @@ interface Props {
 export const GameDate = ({ date, developer, publisher }: Props) => {
   return (
     <p className="text-white/60">
-      Released on <Highlight>{date}</Highlight>
+      Released on <Highlight>{date !== null ? date : "TBD"}</Highlight>
       {(developer || publisher) && (
         <>
           {" by"}

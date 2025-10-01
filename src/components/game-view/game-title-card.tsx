@@ -27,7 +27,8 @@ export const GameTitleCard = ({ userSession, game }: Props) => {
         <div className="max-w-80 sm:hidden">
           <h1 className="text-lg">{game.title}</h1>
           <p className="text-accent-foreground/50 text-sm">
-            Released on {formattedDate} by {game.developer}, {game.publisher}
+            Released on {game.releaseDate ? formattedDate : "TBD"} by{" "}
+            {game.developer}, {game.publisher}
           </p>
         </div>
       </div>
