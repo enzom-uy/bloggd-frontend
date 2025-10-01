@@ -12,7 +12,7 @@ export const GameContent: React.FC<Props> = ({ game }) => {
   const formattedDate = date.toLocaleString(DateTime.DATE_FULL)
   return (
     <div className="flex flex-col gap-4">
-      <div>
+      <div className="hidden sm:block">
         <h1 className="text-2xl">{game.title}</h1>
         <GameDate
           date={formattedDate}
