@@ -1,4 +1,6 @@
 ---
+export const prerender = false
+
 import Layout from "@/layouts/Layout.astro"
 import { GameStats } from "@/components/game-view/game-stats"
 import { GameStatsSkeleton } from "@/components/game-view/game-stats-skeleton"
@@ -7,8 +9,6 @@ import { GameContent } from "@/components/game-view/game-content"
 import { auth } from "@/lib/auth-server"
 import { fetchGameById } from "@/api/games"
 import { GameTitleCard } from "@/components/game-view/game-title-card"
-
-export const prerender = false
 
 const session = await auth.api.getSession({
   headers: Astro.request.headers,
@@ -48,6 +48,6 @@ const {
         <GameStatsSkeleton slot="fallback" />
       </GameStats>
     </div>
-    <GameContent game={response.game} />
+    <GameContent game={response.game} client:load />
   </div>
 </Layout>

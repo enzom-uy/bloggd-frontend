@@ -15,7 +15,7 @@ export const GameContent: React.FC<Props> = ({ game }) => {
       <div className="hidden sm:block">
         <h1 className="text-2xl">{game.title}</h1>
         <GameDate
-          date={formattedDate}
+          date={game.releaseDate ? formattedDate : null}
           developer={game.developer}
           publisher={game.publisher}
         />

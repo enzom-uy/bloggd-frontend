@@ -57,6 +57,13 @@
       "when": 1758732067327,
       "tag": "0007_fair_golden_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1759348205813,
+      "tag": "0008_sleepy_surge",
+      "breakpoints": true
     }
   ]
 }

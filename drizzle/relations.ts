@@ -16,6 +16,9 @@ export const gamesRelations = relations(games, ({many}) => ({
 	userActivities_gameId: many(userActivity, {
 		relationName: "userActivity_gameId_games_id"
 	}),
+	userActivities_gameId: many(userActivity, {
+		relationName: "userActivity_gameId_games_id"
+	}),
 	reviews: many(reviews),
 	collectionGames: many(collectionGames),
 	userGames: many(userGames),
@@ -33,6 +36,9 @@ export const usersRelations = relations(users, ({many}) => ({
 	userSessions: many(userSessions),
 	reviewLikes: many(reviewLikes),
 	collections: many(collections),
+	userActivities_userId: many(userActivity, {
+		relationName: "userActivity_userId_users_id"
+	}),
 	userActivities_userId: many(userActivity, {
 		relationName: "userActivity_userId_users_id"
 	}),
@@ -79,6 +85,9 @@ export const reviewsRelations = relations(reviews, ({one, many}) => ({
 	userActivities_reviewId: many(userActivity, {
 		relationName: "userActivity_reviewId_reviews_id"
 	}),
+	userActivities_reviewId: many(userActivity, {
+		relationName: "userActivity_reviewId_reviews_id"
+	}),
 	user: one(users, {
 		fields: [reviews.userId],
 		references: [users.id]
@@ -120,6 +129,21 @@ export const gameStatsRelations = relations(gameStats, ({one}) => ({
 }));
 
 export const userActivityRelations = relations(userActivity, ({one}) => ({
+	game_gameId: one(games, {
+		fields: [userActivity.gameId],
+		references: [games.id],
+		relationName: "userActivity_gameId_games_id"
+	}),
+	review_reviewId: one(reviews, {
+		fields: [userActivity.reviewId],
+		references: [reviews.id],
+		relationName: "userActivity_reviewId_reviews_id"
+	}),
+	user_userId: one(users, {
+		fields: [userActivity.userId],
+		references: [users.id],
+		relationName: "userActivity_userId_users_id"
+	}),
 	game_gameId: one(games, {
 		fields: [userActivity.gameId],
 		references: [games.id],
