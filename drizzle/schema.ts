@@ -1,4 +1,4 @@
-import { pgTable, index, foreignKey, varchar, bigint, numeric, timestamp, unique, boolean, integer, text, date, pgEnum } from "drizzle-orm/pg-core"
+import { pgTable, index, foreignKey, varchar, bigint, numeric, timestamp, unique, integer, boolean, text, date, pgEnum } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 export const activityType = pgEnum("activity_type", ['add_review', 'start_game', 'finish_game', 'drop_game'])
@@ -80,6 +80,24 @@ export const userSessions = pgTable("user_sessions", {
 	unique("user_sessions_token_key").on(table.token),
 ]);
 
+export const gamePlatforms = pgTable("game_platforms", {
+	id: varchar({ length: 36 }).primaryKey().notNull(),
+	gameId: varchar("game_id", { length: 36 }).notNull(),
+	platformId: varchar("platform_id", { length: 50 }).notNull(),
+	igdbId: integer("igdb_id").notNull(),
+}, (table) => [
+	foreignKey({
+			columns: [table.gameId],
+			foreignColumns: [games.id],
+			name: "game_platforms_game_id_fkey"
+		}).onDelete("cascade"),
+	foreignKey({
+			columns: [table.platformId],
+			foreignColumns: [platforms.id],
+			name: "game_platforms_platform_id_fkey"
+		}).onDelete("cascade"),
+]);
+
 export const gameGenres = pgTable("game_genres", {
 	id: varchar({ length: 36 }).primaryKey().notNull(),
 	gameId: varchar("game_id", { length: 36 }).notNull(),
@@ -131,23 +149,6 @@ export const collections = pgTable("collections", {
 			foreignColumns: [users.id],
 			name: "fk_collections_user_id"
 		}).onUpdate("cascade").onDelete("cascade"),
-]);
-
-export const gamePlatforms = pgTable("game_platforms", {
-	id: varchar({ length: 36 }).primaryKey().notNull(),
-	gameId: varchar("game_id", { length: 36 }).notNull(),
-	platformId: varchar("platform_id", { length: 50 }).notNull(),
-}, (table) => [
-	foreignKey({
-			columns: [table.gameId],
-			foreignColumns: [games.id],
-			name: "game_platforms_game_id_fkey"
-		}).onDelete("cascade"),
-	foreignKey({
-			columns: [table.platformId],
-			foreignColumns: [platforms.id],
-			name: "game_platforms_platform_id_fkey"
-		}).onDelete("cascade"),
 ]);
 
 export const gameStats = pgTable("game_stats", {

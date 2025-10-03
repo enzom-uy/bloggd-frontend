@@ -5,6 +5,7 @@ import Layout from "@/layouts/Layout.astro"
 import { GameStats } from "@/components/game-view/game-stats"
 import { GameStatsSkeleton } from "@/components/game-view/game-stats-skeleton"
 import { GameContent } from "@/components/game-view/game-content"
+import { GamePlatforms } from "@/components/game-view/game-platforms"
 
 import { auth } from "@/lib/auth-server"
 import { fetchGameById } from "@/api/games"
@@ -49,5 +50,6 @@ const {
       </GameStats>
     </div>
     <GameContent game={response.game} client:load />
+    <GamePlatforms server:defer />
   </div>
 </Layout>
