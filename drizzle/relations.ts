@@ -1,55 +1,64 @@
 import { relations } from "drizzle-orm/relations";
-import { games, howlongtobeatData, users, accounts, userSessions, gamePlatforms, platforms, gameGenres, genres, reviews, reviewLikes, collections, gameStats, userActivity, usersSocialLinks, collectionGames, userGames } from "./schema";
+import { users, collections, games, gameGenres, genres, accounts, gamePlatforms, platforms, gameStats, howlongtobeatData, reviews, reviewLikes, userGames, userSessions, usersSocialLinks, collectionGames, userActivity } from "./schema";
 
-export const howlongtobeatDataRelations = relations(howlongtobeatData, ({one}) => ({
+export const collectionsRelations = relations(collections, ({one, many}) => ({
+	user: one(users, {
+		fields: [collections.userId],
+		references: [users.id]
+	}),
+	collectionGames: many(collectionGames),
+}));
+
+export const usersRelations = relations(users, ({many}) => ({
+	collections: many(collections),
+	accounts: many(accounts),
+	reviews: many(reviews),
+	reviewLikes: many(reviewLikes),
+	userGames: many(userGames),
+	userSessions: many(userSessions),
+	usersSocialLinks: many(usersSocialLinks),
+	userActivities_userId: many(userActivity, {
+		relationName: "userActivity_userId_users_id"
+	}),
+	userActivities_userId: many(userActivity, {
+		relationName: "userActivity_userId_users_id"
+	}),
+}));
+
+export const gameGenresRelations = relations(gameGenres, ({one}) => ({
 	game: one(games, {
-		fields: [howlongtobeatData.gameId],
+		fields: [gameGenres.gameId],
 		references: [games.id]
+	}),
+	genre: one(genres, {
+		fields: [gameGenres.genreId],
+		references: [genres.id]
 	}),
 }));
 
 export const gamesRelations = relations(games, ({many}) => ({
-	howlongtobeatData: many(howlongtobeatData),
-	gamePlatforms: many(gamePlatforms),
 	gameGenres: many(gameGenres),
+	gamePlatforms: many(gamePlatforms),
 	gameStats: many(gameStats),
-	userActivities_gameId: many(userActivity, {
-		relationName: "userActivity_gameId_games_id"
-	}),
-	userActivities_gameId: many(userActivity, {
-		relationName: "userActivity_gameId_games_id"
-	}),
+	howlongtobeatData: many(howlongtobeatData),
 	reviews: many(reviews),
-	collectionGames: many(collectionGames),
 	userGames: many(userGames),
+	collectionGames: many(collectionGames),
+	userActivities_gameId: many(userActivity, {
+		relationName: "userActivity_gameId_games_id"
+	}),
+	userActivities_gameId: many(userActivity, {
+		relationName: "userActivity_gameId_games_id"
+	}),
+}));
+
+export const genresRelations = relations(genres, ({many}) => ({
+	gameGenres: many(gameGenres),
 }));
 
 export const accountsRelations = relations(accounts, ({one}) => ({
 	user: one(users, {
 		fields: [accounts.userId],
-		references: [users.id]
-	}),
-}));
-
-export const usersRelations = relations(users, ({many}) => ({
-	accounts: many(accounts),
-	userSessions: many(userSessions),
-	reviewLikes: many(reviewLikes),
-	collections: many(collections),
-	userActivities_userId: many(userActivity, {
-		relationName: "userActivity_userId_users_id"
-	}),
-	userActivities_userId: many(userActivity, {
-		relationName: "userActivity_userId_users_id"
-	}),
-	reviews: many(reviews),
-	usersSocialLinks: many(usersSocialLinks),
-	userGames: many(userGames),
-}));
-
-export const userSessionsRelations = relations(userSessions, ({one}) => ({
-	user: one(users, {
-		fields: [userSessions.userId],
 		references: [users.id]
 	}),
 }));
@@ -69,19 +78,36 @@ export const platformsRelations = relations(platforms, ({many}) => ({
 	gamePlatforms: many(gamePlatforms),
 }));
 
-export const gameGenresRelations = relations(gameGenres, ({one}) => ({
+export const gameStatsRelations = relations(gameStats, ({one}) => ({
 	game: one(games, {
-		fields: [gameGenres.gameId],
+		fields: [gameStats.gameId],
 		references: [games.id]
-	}),
-	genre: one(genres, {
-		fields: [gameGenres.genreId],
-		references: [genres.id]
 	}),
 }));
 
-export const genresRelations = relations(genres, ({many}) => ({
-	gameGenres: many(gameGenres),
+export const howlongtobeatDataRelations = relations(howlongtobeatData, ({one}) => ({
+	game: one(games, {
+		fields: [howlongtobeatData.gameId],
+		references: [games.id]
+	}),
+}));
+
+export const reviewsRelations = relations(reviews, ({one, many}) => ({
+	user: one(users, {
+		fields: [reviews.userId],
+		references: [users.id]
+	}),
+	game: one(games, {
+		fields: [reviews.gameId],
+		references: [games.id]
+	}),
+	reviewLikes: many(reviewLikes),
+	userActivities_reviewId: many(userActivity, {
+		relationName: "userActivity_reviewId_reviews_id"
+	}),
+	userActivities_reviewId: many(userActivity, {
+		relationName: "userActivity_reviewId_reviews_id"
+	}),
 }));
 
 export const reviewLikesRelations = relations(reviewLikes, ({one}) => ({
@@ -95,35 +121,38 @@ export const reviewLikesRelations = relations(reviewLikes, ({one}) => ({
 	}),
 }));
 
-export const reviewsRelations = relations(reviews, ({one, many}) => ({
-	reviewLikes: many(reviewLikes),
-	userActivities_reviewId: many(userActivity, {
-		relationName: "userActivity_reviewId_reviews_id"
-	}),
-	userActivities_reviewId: many(userActivity, {
-		relationName: "userActivity_reviewId_reviews_id"
-	}),
+export const userGamesRelations = relations(userGames, ({one}) => ({
 	user: one(users, {
-		fields: [reviews.userId],
+		fields: [userGames.userId],
 		references: [users.id]
 	}),
 	game: one(games, {
-		fields: [reviews.gameId],
+		fields: [userGames.gameId],
 		references: [games.id]
 	}),
 }));
 
-export const collectionsRelations = relations(collections, ({one, many}) => ({
+export const userSessionsRelations = relations(userSessions, ({one}) => ({
 	user: one(users, {
-		fields: [collections.userId],
+		fields: [userSessions.userId],
 		references: [users.id]
 	}),
-	collectionGames: many(collectionGames),
 }));
 
-export const gameStatsRelations = relations(gameStats, ({one}) => ({
+export const usersSocialLinksRelations = relations(usersSocialLinks, ({one}) => ({
+	user: one(users, {
+		fields: [usersSocialLinks.userId],
+		references: [users.id]
+	}),
+}));
+
+export const collectionGamesRelations = relations(collectionGames, ({one}) => ({
+	collection: one(collections, {
+		fields: [collectionGames.collectionId],
+		references: [collections.id]
+	}),
 	game: one(games, {
-		fields: [gameStats.gameId],
+		fields: [collectionGames.gameId],
 		references: [games.id]
 	}),
 }));
@@ -158,34 +187,5 @@ export const userActivityRelations = relations(userActivity, ({one}) => ({
 		fields: [userActivity.userId],
 		references: [users.id],
 		relationName: "userActivity_userId_users_id"
-	}),
-}));
-
-export const usersSocialLinksRelations = relations(usersSocialLinks, ({one}) => ({
-	user: one(users, {
-		fields: [usersSocialLinks.userId],
-		references: [users.id]
-	}),
-}));
-
-export const collectionGamesRelations = relations(collectionGames, ({one}) => ({
-	collection: one(collections, {
-		fields: [collectionGames.collectionId],
-		references: [collections.id]
-	}),
-	game: one(games, {
-		fields: [collectionGames.gameId],
-		references: [games.id]
-	}),
-}));
-
-export const userGamesRelations = relations(userGames, ({one}) => ({
-	user: one(users, {
-		fields: [userGames.userId],
-		references: [users.id]
-	}),
-	game: one(games, {
-		fields: [userGames.gameId],
-		references: [games.id]
 	}),
 }));
