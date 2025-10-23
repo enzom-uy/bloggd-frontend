@@ -23,6 +23,7 @@ export const useGetGamesSuggestions = ({
   const { data, isLoading, isFetched, error } = useQuery({
     queryKey: ["gamesSuggestions", userInput],
     queryFn: async () => {
+      console.log("🔍 Executing game search request for:", userInput)
       const res = await fetch(url.toString(), QUERY_API_BODY(sessionToken))
       if (!res.ok) {
         const errorData = (await res.json()) as APIError
@@ -34,6 +35,8 @@ export const useGetGamesSuggestions = ({
     },
     enabled: !!userInput && userInput.trim().length > 0,
     retry: false,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
   })
 
   return { data, isLoading, isFetched, error }
