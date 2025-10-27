@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 
 interface Props {
   data:
@@ -12,33 +12,33 @@ interface Props {
 export const useHandlerSearchPopover = ({ data, isLoading, error }: Props) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    if (!data) return
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        inputRef.current &&
-        !inputRef.current.contains(event.target as Node) &&
-        !(event.target as HTMLElement).closest(".popover-content")
-      ) {
-        setIsPopoverOpen(false)
-      }
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    const target = event.target as Node
+
+    if (
+      inputRef.current &&
+      !inputRef.current.contains(target) &&
+      !target.parentElement?.closest('[role="dialog"]') &&
+      !(target as HTMLElement).closest("[data-radix-popper-content-wrapper]")
+    ) {
+      setIsPopoverOpen(false)
     }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  const handleInputFocus = () => {
-    if (!data) return
-    inputRef.current?.focus()
-    if (inputRef.current && inputRef.current.value !== "") {
-      setIsPopoverOpen(true)
+  useEffect(() => {
+    if (isPopoverOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+      return () => document.removeEventListener("mousedown", handleClickOutside)
     }
+  }, [isPopoverOpen, handleClickOutside])
 
-    if (data && data.games?.length > 0) {
+  const handleInputFocus = () => {
+    inputRef.current?.focus()
+
+    if ((data && data.games && data.games.length > 0) || isLoading) {
       setIsPopoverOpen(true)
-    } else {
-      setIsPopoverOpen(false)
     }
   }
 
@@ -48,7 +48,11 @@ export const useHandlerSearchPopover = ({ data, isLoading, error }: Props) => {
     }
   }, [isLoading])
 
-  inputRef.current?.focus()
+  useEffect(() => {
+    if (data && data.games && data.games.length > 0) {
+      setIsPopoverOpen(true)
+    }
+  }, [data])
 
-  return { isPopoverOpen, inputRef, handleInputFocus }
+  return { isPopoverOpen, inputRef, handleInputFocus, popoverRef }
 }

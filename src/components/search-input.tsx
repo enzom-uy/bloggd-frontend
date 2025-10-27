@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react"
 import { Input } from "./ui/input"
-import { useQuery } from "@tanstack/react-query"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { Command, CommandItem, CommandList } from "./ui/command"
 import { useHandlerSearchPopover } from "@/hooks/useHandleSearchPopover"
@@ -55,7 +54,6 @@ const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
         ref={inputRef}
         onChange={handleInputChange}
         onFocus={handleInputFocus}
-        onClick={handleInputFocus}
       />
 
       {error ? null : (
@@ -65,7 +63,6 @@ const SearchInputContent: React.FC<Props> = ({ sessionProp }: Props) => {
             <Command>
               <CommandList>
                 {isLoading && "Loading..."}
-                {/* {error && <div>{error.message}</div>} */}
                 {games && games.length > 0 && (
                   <>
                     {data.games.map((game) => (
