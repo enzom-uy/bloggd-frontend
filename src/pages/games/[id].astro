@@ -13,6 +13,7 @@ import {
 import { auth } from "@/lib/auth-server"
 import { fetchGameById } from "@/api/games"
 import { GameTitleCard } from "@/components/game-view/game-title-card"
+import GameGenres from "@/components/game-view/game-genres"
 
 const session = await auth.api.getSession({
   headers: Astro.request.headers,
@@ -61,6 +62,7 @@ const {
       >
         <GamePlatformsSkeleton slot="fallback" />
       </GamePlatforms>
+      <GameGenres />
     </div>
   </div>
 </Layout>

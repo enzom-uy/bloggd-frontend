@@ -1,6 +1,5 @@
 import type { APIError } from "@/lib/types"
 import { API_URLS, QUERY_API_BODY } from "@/utils/constants"
-import { useQuery } from "@tanstack/react-query"
 
 interface Props {
   igdbId: number
